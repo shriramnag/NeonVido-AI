@@ -1,5 +1,3 @@
-# NeonVido-AI
-
 # 🎬 NeonVido-AI (v1.0.001)
 
 100% फ्री AI वीडियो जनरेटर (Auto-Extend और Shiv AI Voice रेडी) — Google Colab T4 GPU और Android APK के लिए।
