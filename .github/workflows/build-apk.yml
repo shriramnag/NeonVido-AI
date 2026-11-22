@@ -1,0 +1,46 @@
+name: Build NeonVido-AI APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Initialize Capacitor & Add Android
+        run: |
+          npm install
+          npx cap init "NeonVido-AI" "com.shriramnag.neonvidoai" --web-dir www
+          npx cap add android
+          # HTTP/HTTPS क्लियरटेक्स्ट ट्रैफिक की अनुमति दें ताकि Colab लिंक ब्लॉक न हो
+          sed -i 's/<application/<application android:usesCleartextTraffic="true"/g' android/app/src/main/AndroidManifest.xml
+          npx cap sync android
+
+      - name: Build Debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload NeonVido-AI APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeonVido-AI-v1.0.001
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          
