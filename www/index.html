@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>NeonVido-AI v1.0.001</title>
+  <title>NeonVido-AI v1.0.002</title>
   <style>
     :root {
       --bg-dark: #0a0c0a;
@@ -16,7 +16,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 110px; }
+    body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 115px; }
 
     header {
       display: flex; justify-content: space-between; align-items: center;
@@ -42,6 +42,18 @@
     .card.active { border-color: var(--neon-green); background: linear-gradient(90deg, rgba(180,255,0,0.08) 0%, #121612 100%); }
     .badge { font-size: 10px; background: var(--neon-dim); color: var(--neon-green); padding: 2px 6px; border-radius: 4px; margin-top: 4px; display: inline-block; }
 
+    /* Reference Image Upload Box */
+    .ref-row { display: flex; align-items: center; gap: 12px; }
+    .upload-box {
+      width: 78px; height: 78px; border: 1.5px dashed var(--card-border);
+      border-radius: 12px; background: var(--card-bg); display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 11px; cursor: pointer; overflow: hidden; flex-shrink: 0;
+    }
+    .upload-box.has-img { border-color: var(--neon-green); border-style: solid; }
+    .upload-box img { width: 100%; height: 100%; object-fit: cover; }
+    .clear-img-btn { background: #1f261f; color: #ff6b6b; border: 1px solid #3d2424; padding: 6px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; display: none; }
+
     textarea, input[type="text"], select {
       width: 100%; background: var(--card-bg); border: 1px solid var(--card-border);
       border-radius: 10px; color: var(--text-main); padding: 12px; font-size: 14px; outline: none;
@@ -49,7 +61,6 @@
     textarea:focus, input[type="text"]:focus { border-color: var(--neon-green); }
 
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .opt-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 4px; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; }
     .opt-btn.active { border-color: var(--neon-green); background: var(--neon-dim); color: var(--neon-green); }
 
@@ -64,14 +75,17 @@
     .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,12,10,0.96); border-top: 1px solid var(--card-border); padding: 10px 16px; z-index: 100; }
     .bottom-inner { max-width: 540px; margin: 0 auto; }
     .status-line { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
-    .gen-btn { width: 100%; background: var(--neon-green); color: #000; border: none; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .bottom-btn-row { display: flex; gap: 8px; }
+    .gen-btn { flex: 1; background: var(--neon-green); color: #000; border: none; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
     .gen-btn:disabled { background: #232a23; color: #667066; }
+    .ext-plus-btn { background: var(--neon-dim); color: var(--neon-green); border: 1.5px solid var(--neon-green); padding: 0 14px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .ext-plus-btn:disabled { border-color: #232a23; color: #667066; background: transparent; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand">🎬 NeonVido-AI <span class="ver-tag">v1.0.001</span></div>
+    <div class="brand">🎬 NeonVido-AI <span class="ver-tag">v1.0.002</span></div>
     <button id="urlToggle" class="connect-btn" onclick="toggleUrl()">Colab URL</button>
   </header>
 
@@ -86,28 +100,45 @@
 
     <!-- 01 MODEL -->
     <div class="section-label"><span><span class="num">01</span> — MODEL</span></div>
-    <div class="card active" data-model="wan2.1" onclick="pickModel(this)">
+    <div class="card active" data-model="ltx-video" onclick="pickModel(this)">
       <div>
-        <div style="font-weight:700; font-size:14px;">⚡ Wan 2.1 (1.3B Fast)</div>
-        <span class="badge">FREE COLAB T4 • AUTO-EXTEND READY</span>
+        <div style="font-weight:700; font-size:14px;">🚀 Shiv AI LTX-Turbo (All-in-One)</div>
+        <span class="badge">CRASH-FREE T4 • AUTO-EXTEND READY</span>
       </div>
       <span class="chk" style="color:var(--neon-green); font-weight:bold;">✓</span>
     </div>
-    <div class="card" data-model="ltx-video" onclick="pickModel(this)">
+    <div class="card" data-model="wan2.1" onclick="pickModel(this)">
       <div>
-        <div style="font-weight:700; font-size:14px;">🚀 LTX-Video Turbo</div>
-        <span class="badge">HIGH SPEED RENDER</span>
+        <div style="font-weight:700; font-size:14px;">⚡ Wan 2.1 (1.3B Fast)</div>
+        <span class="badge">CINEMATIC MOTION</span>
       </div>
       <span class="chk" style="color:var(--neon-green); font-weight:bold;"></span>
     </div>
 
-    <!-- 02 PROMPT -->
-    <div class="section-label"><span><span class="num">02</span> — SCENE / STORY PROMPT *</span></div>
+    <!-- 02 IMAGE REFERENCE -->
+    <div class="section-label">
+      <span><span class="num">02</span> — IMAGE REFERENCE</span>
+      <span>Optional</span>
+    </div>
+    <div class="ref-row">
+      <label class="upload-box" id="uploadBox">
+        <input type="file" id="refImageInput" accept="image/*" style="display:none" onchange="handleRefImage(event)" />
+        <span style="font-size:20px;">🖼️+</span>
+        <span style="margin-top:3px;">0/1</span>
+      </label>
+      <div style="flex:1;">
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.4;">किसी फोटो से वीडियो बनाने या कैरेक्टर का चेहरा समान रखने के लिए रेफरेंस इमेज चुनें।</div>
+        <button id="clearImgBtn" class="clear-img-btn" style="margin-top:6px;" onclick="clearRefImage()">✕ Remove Image</button>
+      </div>
+    </div>
+
+    <!-- 03 PROMPT -->
+    <div class="section-label"><span><span class="num">03</span> — SCENE / STORY PROMPT *</span></div>
     <textarea id="promptInput" rows="4" placeholder="वीडियो की कहानी या दृश्य लिखें... (लंबे वीडियो के लिए हर सीन को नई लाइन में भी लिख सकते हैं)"></textarea>
 
-    <!-- 03 EXTEND DURATION (LONG VIDEO) -->
+    <!-- 04 EXTEND DURATION (LONG VIDEO) -->
     <div class="section-label">
-      <span><span class="num">03</span> — EXTEND VIDEO LENGTH</span>
+      <span><span class="num">04</span> — EXTEND VIDEO LENGTH</span>
       <span style="color:var(--neon-green);">AUTO-CHAINING</span>
     </div>
     <div class="grid-4" id="lenGroup">
@@ -123,8 +154,8 @@
       <div class="opt-btn" data-res="480p" style="color:var(--neon-green);">480p Fast</div>
     </div>
 
-    <!-- 04 SHIV AI VOICE CLONING PLUGIN -->
-    <div class="section-label"><span><span class="num">04</span> — SHIV AI VOICE CLONING (OPTIONAL)</span></div>
+    <!-- 05 SHIV AI VOICE CLONING PLUGIN -->
+    <div class="section-label"><span><span class="num">05</span> — SHIV AI VOICE CLONING (OPTIONAL)</span></div>
     <div class="voice-box">
       <div class="toggle-row">
         <div>
@@ -154,15 +185,18 @@
         <span id="statusText">🔴 Colab Not Connected</span>
         <span id="modeInfo">Target: 5 Sec • 16:9</span>
       </div>
-      <button id="genBtn" class="gen-btn" onclick="startGeneration(false)">✨ GENERATE VIDEO</button>
+      <div class="bottom-btn-row">
+        <button id="genBtn" class="gen-btn" onclick="startGeneration(false)">✨ GENERATE VIDEO</button>
+        <button id="extPlusBtn" class="ext-plus-btn" onclick="extendCurrentVideo()" title="Extend Previous Video">➕ Extend</button>
+      </div>
     </div>
   </div>
 
   <script>
-    let selectedModel = "wan2.1";
+    let selectedModel = "ltx-video";
     let targetMinutes = "0.1";
     let aspectRatio = "16:9";
-    let lastJobId = null;
+    let referenceImageBase64 = null;
     let colabUrl = localStorage.getItem("neonvido_url") || "";
 
     window.onload = () => {
@@ -187,11 +221,46 @@
       toggleUrl();
     }
 
+    // Colab को डिस्कनेक्ट होने से बचाने के लिए हर 30 सेकंड में Heartbeat सिग्नल
+    setInterval(async () => {
+      if (!colabUrl) return;
+      try {
+        const res = await fetch(`${colabUrl}/ping`);
+        if (res.ok) {
+          document.getElementById("statusText").innerText = "🟢 Colab Active (Keep-Alive ON)";
+        }
+      } catch (e) {
+        document.getElementById("statusText").innerText = "🟠 Reconnecting Colab...";
+      }
+    }, 30000);
+
     function pickModel(el) {
       document.querySelectorAll(".card").forEach(c => { c.classList.remove("active"); c.querySelector(".chk").innerText = ""; });
       el.classList.add("active");
       el.querySelector(".chk").innerText = "✓";
       selectedModel = el.dataset.model;
+    }
+
+    function handleRefImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        referenceImageBase64 = reader.result;
+        const box = document.getElementById("uploadBox");
+        box.classList.add("has-img");
+        box.innerHTML = `<input type="file" id="refImageInput" accept="image/*" style="display:none" onchange="handleRefImage(event)" /><img src="${referenceImageBase64}" />`;
+        document.getElementById("clearImgBtn").style.display = "inline-block";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearRefImage() {
+      referenceImageBase64 = null;
+      const box = document.getElementById("uploadBox");
+      box.classList.remove("has-img");
+      box.innerHTML = `<input type="file" id="refImageInput" accept="image/*" style="display:none" onchange="handleRefImage(event)" /><span style="font-size:20px;">🖼️+</span><span style="margin-top:3px;">0/1</span>`;
+      document.getElementById("clearImgBtn").style.display = "none";
     }
 
     function pickOpt(group, el) {
@@ -232,8 +301,10 @@
       if (!prompt) return alert("कृपया प्रॉम्प्ट लिखें!");
 
       const btn = document.getElementById("genBtn");
+      const extBtn = document.getElementById("extPlusBtn");
       const status = document.getElementById("statusText");
       btn.disabled = true;
+      extBtn.disabled = true;
       btn.innerText = isExtend ? "⏳ EXTENDING VIDEO..." : "⏳ GENERATING ON COLAB...";
       status.innerText = "🟡 Rendering & Chaining Clips...";
 
@@ -247,6 +318,7 @@
             target_minutes: parseFloat(targetMinutes),
             ratio: aspectRatio,
             extend: isExtend,
+            reference_image: referenceImageBase64,
             use_voice: document.getElementById("useVoiceClone").checked,
             voice_script: document.getElementById("voiceText").value.trim()
           })
@@ -270,10 +342,10 @@
         status.innerText = "🔴 Error";
       } finally {
         btn.disabled = false;
+        extBtn.disabled = false;
         btn.innerText = "✨ GENERATE VIDEO";
       }
     }
   </script>
 </body>
-  </html>
-  
+</html>
